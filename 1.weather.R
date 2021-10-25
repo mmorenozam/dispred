@@ -90,8 +90,6 @@ prof<- ggplot(subset(sm_clim,MESS_DATUM>=as.Date('2015-01-01')),aes(x=MESS_DATUM
 save_plot(paste0(out,'2.profiles_peep2.pdf'),prof,base_height = 12, base_width = 12)
 
 
-
-
 ######################### csv for python resampling ###############
 
 out.csv <- clim %>% group_by(MESS_DATUM) %>%

@@ -2,7 +2,7 @@
 """
 Created on Thu Jun 18 22:40:42 2020
 
-path should be changed accordingly
+path should be changed accordingly (output should go to working_data)
 
 @author: mmorenozam
 """
