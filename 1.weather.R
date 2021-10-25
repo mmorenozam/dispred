@@ -99,3 +99,4 @@ out.csv <- clim %>% group_by(MESS_DATUM) %>%
                  "UPM"), mean, na.rm = TRUE)
 
 write.csv(out.csv,paste0(rd_out,'weat4python_2.csv'),row.names = F)
+
