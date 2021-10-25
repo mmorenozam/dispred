@@ -66,12 +66,4 @@ ppf(ccam,0.04,'rsq','camp',10)
 ppf(crot,0.04,'rsq','rotv',10)
 ppf(cbor,0.04,'rsq','borr',10)
 
-jums <-subset(ccam,method=='spearman'&lag<11)
 
-ggplot(jums,aes(week,as.factor(lag)))+
-  geom_raster(aes(fill=log(val)),hjust = 0,vjust=0)+
-  scale_fill_gradientn(colours=c("#FF0000FF","#0000FFFF"))+
-  facet_wrap(~wc)+
-  #theme_bw()+
-
-  theme(legend.position = "bottom")
