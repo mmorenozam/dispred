@@ -100,8 +100,3 @@ out.csv <- clim %>% group_by(MESS_DATUM) %>%
 
 write.csv(out.csv,paste0(rd_out,'weat4python_2.csv'),row.names = F)
 
-=======
-require(rdwd)
-
-data(metaIndex)
->>>>>>> 98616a8498011ddf189e4b1467316d1459fd38f9
