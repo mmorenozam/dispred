@@ -18,7 +18,7 @@ dp_func <- function(df){
   
 }
 
-dates <- read.csv(paste0(r_data,"t_inc_rot.csv"))
+dates <- read.csv(paste0(r_data,"t_cas_rot.csv"))
 dates <- dp_func(dates)
 wdata <- read.csv(paste0(w_data,"wweather.csv"))
 wdata$MESS_DATUM <- as.Date(wdata$MESS_DATUM)
@@ -29,4 +29,4 @@ head(wdata)
 
 ggplot(wdata,aes(x=week,y=TMK,group=year))+
   geom_line(alpha=0.3)+
-  geom_line(aes(x=week,y=incidence*10,group=year),color='red')
+  geom_line(aes(x=week,y=cases/10,group=year),color='red')

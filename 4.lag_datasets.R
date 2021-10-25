@@ -29,11 +29,11 @@ lagf <- function(wdb,dis,pre,max_date){
   #return(pl)
 }
 
-lagf(paste0(r_data,'weat4python_2.csv'),paste0(r_data,"t_inc_rot.csv"), 
+lagf(paste0(r_data,'weat4python_2.csv'),paste0(r_data,"t_cas_rot.csv"), 
      paste0(w_data,'ab_rot'))
-lagf(paste0(r_data,'weat4python_2.csv'),paste0(r_data,"t_inc_inf.csv"), 
+lagf(paste0(r_data,'weat4python_2.csv'),paste0(r_data,"t_cas_inf.csv"), 
      paste0(w_data,'ab_inf'))
-lagf(paste0(r_data,'weat4python_2.csv'),paste0(r_data,"t_inc_camp.csv"),
+lagf(paste0(r_data,'weat4python_2.csv'),paste0(r_data,"t_cas_camp.csv"),
      paste0(w_data,'ab_cam'))
-lagf(paste0(r_data,'weat4python_2.csv'),paste0(r_data,"t_inc_borr.csv"),
+lagf(paste0(r_data,'weat4python_2.csv'),paste0(r_data,"t_cas_borr.csv"),
      paste0(w_data,'ab_bor'))

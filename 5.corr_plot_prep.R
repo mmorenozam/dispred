@@ -10,7 +10,7 @@ rot <- read.csv(paste0(w_data,"ab_rot.csv"))
 
 cof <- function(df,depend){
   w <- seq(1,53,1) #week
-  s <- seq(0,51,1) #lag
+  s <- seq(0,11,1) #lag
   b <- c('TMK','FM','RSK','SHK_TAG','PM','UPM','TXK','TNK')
   m <- c('spearman')
   df_out <- data.frame()
@@ -54,10 +54,10 @@ cof <- function(df,depend){
   return(df_out)
 }
 
-corr_inf<-cof(inf,"incidence")
-corr_cam<-cof(cam,"incidence")
-corr_rot<-cof(rot,"incidence")
-corr_bor<-cof(bor,"incidence")
+corr_inf<-cof(inf,"cases")
+corr_cam<-cof(cam,"cases")
+corr_rot<-cof(rot,"cases")
+corr_bor<-cof(bor,"cases")
 
 write.csv(corr_inf,paste0(w_data,"corr_inf_weekly.csv"),row.names = F)
 write.csv(corr_cam,paste0(w_data,"corr_cam_weekly.csv"),row.names = F)
