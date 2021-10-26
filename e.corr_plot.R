@@ -3,11 +3,10 @@ library(cowplot)
 
 wd <- getwd()
 out_plots <- paste0(wd,'/figures_sliding/')
-setwd(paste0(wd,'/working_data/'))
-
+w_data <- paste0(wd,'/working_data/')
 
 ppf <- function(trs,tp,cod){
-  fils <- list.files(pattern=cod)
+  fils <- list.files(path=w_data,pattern=cod)
   for (i in 1:length(fils)){
     df <- read.csv(fils[i])
     df$wc <- factor(df$wc,
