@@ -19,8 +19,7 @@ ppf <- function(df,trs,tp,cod,l_val){
   df$val <- log(df$val)
   df$val[df$val>=log(trs)] <- NA
   df <- df %>%
-    mutate(corr = ifelse(is.na(val)|is.infinite(val),NA,corr)) %>%
-    mutate(rsq = ifelse(is.na(val)|is.infinite(val),NA,rsq))
+    mutate(corr = ifelse(is.na(val)|is.infinite(val),NA,corr))
   
   if (tp=='pvals'){
     p1 <- ggplot(subset(df,method=='spearman'),aes(week,as.factor(lag)))+

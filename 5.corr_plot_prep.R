@@ -20,28 +20,26 @@ cof <- function(df,depend){
     for (j in 1:length(s)){
       for (k in 1:length(b)){
         for (l in 1:length(m)){
-          ct <- tryCatch(cor.test(df[df$lag==s[j]&df$week==w[i],b[k]],
-                                  df[df$lag==s[j]&df$week==w[i],depend],
+          ct <- tryCatch(cor.test(df[df[,13]==s[j]&df[,3]==w[i],b[k]],
+                                  df[df[,13]==s[j]&df[,3]==w[i],depend],
                                   method=m[l],exact = F),
                          error = function(e) NA)
           lr <- tryCatch(lm(df[df$lag==s[j]&df$week==w[i],depend]~df[df$lag==s[j]&df$week==w[i],b[k]]),
                          error = function(e) NA)
-          rtb <- data.frame(cbind(s[j],w[i],b[k],m[l],as.numeric(ct[3]),as.numeric(ct[4]),
-                                  summary(lr)$r.squared))
+          rtb <- data.frame(cbind(s[j],w[i],b[k],m[l],as.numeric(ct[3]),as.numeric(ct[4])))
           #column order: lag, week, weather,method, pvalue,correlation,r.squared
           df_out <- rbind(df_out,rtb)
         }
       }
     }
   }
-  colnames(df_out) <- c('lag','week','wc','method','val','corr','rsq')
+  colnames(df_out) <- c('lag','week','wc','method','val','corr')
   df_out$lag <- as.numeric(as.character(df_out$lag))
   df_out$val <- as.numeric(as.character(df_out$val))
   df_out$week <- as.numeric(as.character(df_out$week))
   df_out$corr <- as.numeric(df_out$corr)
   df_out$method <- as.character(df_out$method)
   df_out$wc <- as.character(df_out$wc)
-  df_out$rsq <- as.numeric(as.character(df_out$rsq))
   df_out <- df_out %>%  mutate(wc = recode(wc, 
                                            `TMK` = 'Temp',
                                            `FM` = 'Wind',
