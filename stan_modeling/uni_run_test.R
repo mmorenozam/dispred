@@ -4,8 +4,8 @@ wd <- getwd()
 
 w_data <- paste0(wd,'/stan_modeling/stan_data/rot/')
 
-training <- read.csv(paste0(w_data,'rot_training_w14_lag_3.csv'))
-testing <- read.csv(paste0(w_data,'rot_testing_w14_lag_3.csv'))
+training <- read.csv(paste0(w_data,'rot_training_w7_lag_0.csv'))
+testing <- read.csv(paste0(w_data,'rot_testing_w7_lag_0.csv'))
 
 W <- length(unique(training$cal_week))
 N <- nrow(training)
@@ -18,9 +18,9 @@ W_pred <- testing$week
 y_test <- testing$cases
 w1_pred <- testing$TXK/10
 
-model <- stan(paste0(wd,'/stan_modeling/uni_slope.stan'),
+model <- stan(paste0(wd,'/stan_modeling/uni_slope_ari.stan'),
               data = c("W","N","ww","y","w1","N_pred","W_pred","y_test","w1_pred"),
               cores = min(2,parallel::detectCores()),
               chains=2,warmup = 1000,iter=3000)
 
-save(model,file=paste0(wd,"/stan_modeling/stan_outputs/temp_lag_3_win_14_rot.Rsave"))
+save(model,file=paste0(wd,"/stan_modeling/stan_outputs/temp_ari_lag_0_win_7_rot.Rsave"))

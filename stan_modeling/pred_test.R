@@ -3,7 +3,7 @@ wd <- getwd()
 out_data <- paste0(wd,'/stan_modeling/stan_outputs/')
 tra_data <- paste0(wd,'/stan_modeling/stan_data/')
 
-load(paste0(out_data,'temp_snow_int_lag_0_win_7_rot.Rsave'))
+load(paste0(out_data,'temp_ari_lag_0_win_7_rot.Rsave'))
 
 test_data <- read.csv(paste0(tra_data,'rot/rot_testing_w7_lag_2.csv'))
 y_pred <- as.data.frame(model,pars="y_pred")%>%
@@ -21,3 +21,5 @@ ggplot(data=subset(y_pred,year!=2016),aes(y=median,x=week))+
   geom_point(aes(x=week,y=cases),size=0.8)+
   xlab("epi-week")+ylab("number of cases")+
   facet_wrap(~year)
+
+shinystan::launch_shinystan(model)
