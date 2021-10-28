@@ -8,7 +8,7 @@ w_data <- paste0(wd,'/working_data/')
 ppf <- function(trs,tp,cod){
   fils <- list.files(path=w_data,pattern=cod)
   for (i in 1:length(fils)){
-    df <- read.csv(fils[i])
+    df <- read.csv(paste0(w_data,fils[i]))
     df$wc <- factor(df$wc,
                     levels=c("Temp","Max. Temp","Min. Temp","Prec","Snow","Wind","Humid","Press"),
                     labels=c("Temp","Max. Temp","Min. Temp","Prec","Snow","Wind","Humid","Press"))

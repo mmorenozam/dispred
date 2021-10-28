@@ -1,0 +1,28 @@
+library(rstan)
+
+wd <- getwd()
+
+w_data <- paste0(wd,'/stan_modeling/stan_data/rot/')
+
+training <- read.csv(paste0(w_data,'rot_training_w7_lag_0.csv'))
+testing <- read.csv(paste0(w_data,'rot_testing_w7_lag_0.csv'))
+
+W <- length(unique(training$cal_week))
+N <- nrow(training)
+ww <- training$week
+y <- training$cases
+w1 <- training$TXK/10
+w2 <- training$SHK_TAG/10
+
+N_pred <- nrow(testing)
+W_pred <- testing$week
+y_test <- testing$cases
+w1_pred <- testing$TXK/10
+w2_pred <- testing$SHK_TAG/10
+
+model <- stan(paste0(wd,'/stan_modeling/bi_slope_int.stan'),
+              data = c("W","N","ww","y","w1","w2","N_pred","W_pred","y_test","w1_pred","w2_pred"),
+              cores = min(2,parallel::detectCores()),
+              chains=2,warmup = 1000,iter=3000)
+
+save(model,file=paste0(wd,"/stan_modeling/stan_outputs/temp_snow_int_lag_0_win_7_rot.Rsave"))

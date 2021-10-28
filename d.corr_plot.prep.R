@@ -11,6 +11,8 @@ rot <- read.csv(paste0(w_data,"sw_rot.csv"))
 cof <- function(df,depend,prx){
   dff <- df
   dff[dff<0.00001] <- 0 # to avoid meaningless correlations
+  dff$date <- as.Date(dff$date)
+  dff <- subset(dff,date<as.Date('2017-01-01'))
   wd <- as.numeric(names(table(df[,'window'])))
   for (u in 1:length(wd)){
     df <- subset(dff,window==wd[u])

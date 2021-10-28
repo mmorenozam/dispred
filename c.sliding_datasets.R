@@ -26,7 +26,7 @@ lagf <- function(wdb,dis,w){
   cas[,1] <- seq(as.Date("2001-01-07"), as.Date("2022-01-03"), by="7 days")
   cas[is.na(cas)] <- 0
   cas[,1] <- as.Date(cas[,1])
-  cas <- subset(cas,cas[,1]<as.Date('2017-01-01'))
+  # cas <- subset(cas,cas[,1]<as.Date('2017-01-01'))
   d_cases <- as.data.frame(diff(cas$cases))
   colnames(d_cases) <- 'd_cases'
   cas <- cbind(cas,rbind(d_cases,0))
