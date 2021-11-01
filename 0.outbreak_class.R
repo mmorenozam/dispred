@@ -30,6 +30,8 @@ bor_o <- out_class(bor) #2.00  7.25 22.00
 inf_o <- out_class(inf) #1.00 11.25 95.50
 rot_o <- out_class(rot) #16 51 99
 
+classInt::classIntervals(inf$cases,style='headtails')
+
 ggplot(data=cam_o,aes(x=week,y=cases,group=year))+
   geom_point(aes(colour=outb))+
   geom_line(alpha=0.1)
