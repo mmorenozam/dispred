@@ -5,8 +5,8 @@ wd <- getwd()
 
 w_data <- paste0(wd,'/stan_modeling/stan_data/rot/')
 
-training <- read.csv(paste0(w_data,'rot_training_w7_lag_2.csv'))
-testing <- read.csv(paste0(w_data,'rot_testing_w7_lag_2.csv'))
+training <- read.csv(paste0(w_data,'rot_training_w7_lag_3.csv'))
+testing <- read.csv(paste0(w_data,'rot_testing_w7_lag_3.csv'))
 
 sea_func <- function(df){
   df$date <- as.Date(df$date)
@@ -40,4 +40,4 @@ model <- stan(paste0(wd,'/stan_modeling/uni_slope_season.stan'),
               cores = min(2,parallel::detectCores()),
               chains=2,warmup = 1000,iter=3000)
 
-save(model,file=paste0(wd,"/stan_modeling/stan_outputs/temp_season_lag_2_win_7_rot.Rsave"))
+save(model,file=paste0(wd,"/stan_modeling/stan_outputs/temp_season_lag_3_win_7_rot.Rsave"))

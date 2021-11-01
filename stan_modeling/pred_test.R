@@ -3,10 +3,12 @@ wd <- getwd()
 out_data <- paste0(wd,'/stan_modeling/stan_outputs/')
 tra_data <- paste0(wd,'/stan_modeling/stan_data/')
 
-load(paste0(out_data,'temp_lag_0_win_7_rot.Rsave'))
 
-test_data <- read.csv(paste0(tra_data,'rot/rot_testing_w7_lag_2.csv'))
-y_pred <- as.data.frame(model,pars="y_pred")%>%
+
+load(paste0(out_data,'temp_season_lag_3_win_7_rot.Rsave'))
+
+test_data <- read.csv(paste0(tra_data,'rot/rot_training_w7_lag_2.csv'))
+y_pred <- as.data.frame(model,pars="y_rep")%>%
   gather(factor_key = T) %>%
   group_by(key)%>%
   summarize(lb=quantile(value,probs=0.05),
@@ -23,3 +25,5 @@ ggplot(data=subset(y_pred,year!=2016),aes(y=median,x=week))+
   facet_wrap(~year)
 
 shinystan::launch_shinystan(model)
+
+
