@@ -12,7 +12,7 @@ rot$outb <- ifelse(rot$case<qt[1],'NO',
                           ifelse(rot$cases>=qt[2]&rot$cases<qt[3],'Medium','Large')))
 
 
-rpca_dat <- subset(rot,window==14&lag==3)
+rpca_dat <- subset(rot,window==7&lag==0)
 rpca_out <- rpca_dat$outb
 rpca_dat <- rpca_dat[,c(5,7,8,9,10,11,12,13)]
 # rpca_dat <- rpca_dat[,c(5,7,8,12,13)]
