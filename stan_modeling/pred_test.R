@@ -5,9 +5,9 @@ tra_data <- paste0(wd,'/stan_modeling/stan_data/')
 
 
 
-load(paste0(out_data,'temp_ari_lag_0_win_7_rot.Rsave'))
+load(paste0(out_data,'inter_simp_lag_0_win_7_rot.Rsave'))
 
-test_data <- read.csv(paste0(tra_data,'inf/inf_training_w7_lag_2.csv'))
+test_data <- read.csv(paste0(tra_data,'rot/rot_training_w7_lag_2.csv'))
 y_pred <- as.data.frame(model,pars="y_rep")%>%
   gather(factor_key = T) %>%
   group_by(key)%>%
@@ -24,6 +24,9 @@ ggplot(data=subset(y_pred,year!=2016),aes(y=median,x=week))+
   xlab("epi-week")+ylab("number of cases")+
   facet_wrap(~year)
 
-shinystan::launch_shinystan(model)
+rmse <- as.data.frame(model,pars='rmse')
+hist(rmse$rmse)
 
+
+shinystan::launch_shinystan(model)
 

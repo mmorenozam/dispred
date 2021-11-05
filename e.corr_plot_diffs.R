@@ -14,9 +14,8 @@ ppf <- function(trs,tp,cod){
     df$wc <- factor(df$wc,
                     levels=c("Temp","Max. Temp","Min. Temp","Prec","Snow","Wind","Humid","Press"),
                     labels=c("Temp","Max. Temp","Min. Temp","Prec","Snow","Wind","Humid","Press"))
-    df$val[df$val>=trs] <- NA
     df$val <- log(df$val)
-    # df$val[df$val>=log(trs)] <- NA
+    df$val[df$val>=log(trs)] <- NA
     df <- subset(df,lag<=5)
     df <- df %>%
       mutate(corr = ifelse(is.na(val)|is.infinite(val),NA,corr)) %>%
@@ -29,28 +28,9 @@ ppf <- function(trs,tp,cod){
         facet_wrap(~wc)+
         theme_bw()+
         theme(legend.position = "bottom")
-      save_plot(paste0(out_plots,"pvals_",cod,unique(df$window),".pdf"),p1,base_height = 9,base_width = 12)
+      save_plot(paste0(out_plots,"diff_pvals_",cod,unique(df$window),".pdf"),p1,base_height = 9,base_width = 12)
     } 
     
-    if (tp=='rsq'){
-      p1 <- ggplot(subset(df,method=='spearman'),aes(week,as.factor(lag)))+
-        geom_raster(aes(fill=val),hjust = 0,vjust=0)+
-        scale_fill_gradientn(colours=c("#0000FFFF","#FF0000FF"))+
-        facet_wrap(~wc)+
-        theme_bw()+
-        theme(legend.position = "bottom")
-      save_plot(paste0(out_plots,"rsqd_",cod,unique(df$window),".pdf"),p1,base_height = 9,base_width = 12)
-    }  
-    
-    if (tp=='aic'){
-      p1 <- ggplot(subset(df,method=='spearman'),aes(week,as.factor(lag)))+
-        geom_raster(aes(fill=val),hjust = 0,vjust=0)+
-        scale_fill_gradientn(colours=c("#0000FFFF","white","#FF0000FF"))+
-        facet_wrap(~wc)+
-        theme_bw()+
-        theme(legend.position = "bottom")
-      save_plot(paste0(out_plots,"aic_",cod,unique(df$window),".pdf"),p1,base_height = 9,base_width = 12)
-    } 
     if (tp=='corr'){
       p1 <- ggplot(subset(df,method=='spearman'),aes(week,as.factor(lag)))+
         geom_raster(aes(fill=corr),hjust = 0,vjust=0)+
@@ -58,21 +38,21 @@ ppf <- function(trs,tp,cod){
         facet_wrap(~wc)+
         theme_bw()+
         theme(legend.position = "bottom")
-      save_plot(paste0(out_plots,"corrs_",cod,unique(df$window),".pdf"),p1,base_height = 9,base_width = 12)
+      save_plot(paste0(out_plots,"diff_corrs_",cod,unique(df$window),".pdf"),p1,base_height = 9,base_width = 12)
     }
   }
 }
 
-ppf(0.05,'pvals','sw_corr_bor_')
-ppf(0.05,'pvals','sw_corr_rot_')
-ppf(0.05,'pvals','sw_corr_inf_')
-ppf(0.05,'pvals','sw_corr_cam_')
 
-ppf(0.05,'corr','sw_corr_bor_')
-ppf(0.05,'corr','sw_corr_rot_')
-ppf(0.05,'corr','sw_corr_inf_')
-ppf(0.05,'corr','sw_corr_cam_')
+ppf(0.05,'pvals','diff_sw_corr_bor_')
+ppf(0.05,'pvals','diff_sw_corr_rot_')
+ppf(0.05,'pvals','diff_sw_corr_inf_')
+ppf(0.05,'pvals','diff_sw_corr_cam_')
 
+ppf(0.05,'corr','diff_sw_corr_bor_')
+ppf(0.05,'corr','diff_sw_corr_rot_')
+ppf(0.05,'corr','diff_sw_corr_inf_')
+ppf(0.05,'corr','diff_sw_corr_cam_')
 
 ot_plt <- function(dis,cod){
   fils <- list.files(path=w_data,pattern=cod)
@@ -88,7 +68,7 @@ ot_plt <- function(dis,cod){
       geom_jitter(aes(colour=as.factor(window)),alpha=0.5,width = 0.25, height = 0.25,size=0.75)+
       facet_wrap(~lag,ncol=1)+
       geom_hline(yintercept = log(0.05),colour='red',linetype='dashed')
-    save_plot(paste0(out_plots_2,dis,"_boxplt_",wc_n[j],".pdf"),p1,base_height = 14,base_width = 12)
+    save_plot(paste0(out_plots_2,"diff_",dis,"_boxplt_",wc_n[j],".pdf"),p1,base_height = 14,base_width = 12)
     
     p2<- ggplot(df_p,aes(x=corr,y=log(val)))+
       geom_point(aes(colour=week))+
@@ -98,12 +78,13 @@ ot_plt <- function(dis,cod){
                             ,breaks = c(10,20,30,40,50))+
       guides(fill = guide_legend(reverse = T))+
       geom_hline(yintercept = log(0.05),colour='red',linetype='dashed')
-    save_plot(paste0(out_plots_2,dis,"_vul_",wc_n[j],".pdf"),p2,base_height = 12,base_width = 12)
+    save_plot(paste0(out_plots_2,"diff_",dis,"_vul_",wc_n[j],".pdf"),p2,base_height = 12,base_width = 12)
   }
 }
 
-ot_plt('rot', 'sw_corr_rot_')
-ot_plt('bor', 'sw_corr_bor_')
-ot_plt('cam', 'sw_corr_cam_')
-ot_plt('inf', 'sw_corr_inf_')
-
+ot_plt('rot', 'diff_sw_corr_rot_')
+ot_plt('bor', 'diff_sw_corr_bor_')
+ot_plt('cam', 'diff_sw_corr_cam_')
+ot_plt('inf', 'diff_sw_corr_inf_')
+ 
+ 
