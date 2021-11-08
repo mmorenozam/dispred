@@ -4,9 +4,11 @@ wd <- getwd()
 
 r_data <- paste0(wd,'/raw_data/')
 w_data <- paste0(wd,'/working_data/')
+all_weat <- read.csv(paste0(w_data,'weas3.csv'),sep=';')
+
 
 lagf <- function(wdb,dis,w){
-  wtv <- read.csv(wdb,sep=';')
+  wtv <- wdb
   wtv[,1] <- as.Date(wtv[,1])
   wtv <- subset(wtv,window==w)
   shift <- data.frame(cbind(diff(wtv$TMK),
@@ -24,40 +26,40 @@ lagf <- function(wdb,dis,w){
   cas$week <- substr(cas[,1],11,12)
   cas$week <- as.numeric(cas$week)
   cas[,1] <- seq(as.Date("2001-01-07"), as.Date("2022-01-03"), by="7 days")
+  #cas <- subset(cas,cas[,1]<as.Date("2021-05-02")) #this filter is for the maximum date of cases in disease data
+  cas <- subset(cas,cas[,1]<as.Date("2020-12-31")) #this filter is because weather time series are available only until this day
   cas[is.na(cas)] <- 0
-  cas[,1] <- as.Date(cas[,1])
-  # cas <- subset(cas,cas[,1]<as.Date('2017-01-01'))
   d_cases <- as.data.frame(diff(cas$cases))
   colnames(d_cases) <- 'd_cases'
   cas <- cbind(cas,rbind(d_cases,0))
-  wnum <- seq(0,357,7)
-  pl <- list()
-  for (i in 1:length(wnum)){
-    tdf <- wtv
-    tdf$year <- as.numeric(as.character(strftime(tdf$MESS_DATUM,format= "%Y")))
-    tdf[,1] <- tdf[,1] + wnum[i]
-    tdf$lag <- i-1
-    tdf <- left_join(cas,tdf,by=c('date'='MESS_DATUM'))
-    pl[[i+1]]<-tdf
+  lag_c <- c(0:3)
+  l_out <- list()
+  wtv$year <- as.numeric(as.character(strftime(wtv$MESS_DATUM,format= "%Y")))
+  for (i in 1:length(lag_c)){
+    wtv1 <- wtv
+    wtv1$new_date <- wtv1[,1] + lag_c[i]*7
+    wtv1$lag <- lag_c[i]
+    df_out <- left_join(cas,wtv1,by=c('date'='new_date'))
+    l_out[[i]] <- df_out
   }
-  pl <- bind_rows(pl)
-  return(pl)
+  return(bind_rows(l_out))
+  #return(l_out)
 }
 
 out_fun <- function(wd,dd,prx,wv){
   out_df <- data.frame()
   for (k in 1:length(wv)){
-    dd_out <- lagf(paste0(w_data,wd),paste0(r_data,dd),wv[k])
+    dd_out <- lagf(wd,paste0(r_data,dd),wv[k])
     out_df <- rbind(out_df,dd_out)
   }
   write.csv(out_df,file=paste0(w_data,prx,'.csv'),row.names = F)
   #return(out_df)
 }
 
-w_size <- c(7,14,21,28,35)
 
-out_fun('weas3.csv',"t_cas_rot.csv",'sw_rot',w_size)
-out_fun('weas3.csv',"t_cas_inf.csv",'sw_inf',w_size)
-out_fun('weas3.csv',"t_cas_camp.csv",'sw_cam',w_size)
-out_fun('weas3.csv',"t_cas_borr.csv",'sw_bor',w_size)
+w_size <- c(7,14,21,28)
 
+out_fun(all_weat,"t_cas_rot.csv",'sw_rot',w_size)
+out_fun(all_weat,"t_cas_inf.csv",'sw_inf',w_size)
+out_fun(all_weat,"t_cas_camp.csv",'sw_cam',w_size)
+out_fun(all_weat,"t_cas_borr.csv",'sw_bor',w_size)
