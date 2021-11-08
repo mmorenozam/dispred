@@ -7,39 +7,77 @@ w_data <- paste0(w_dic,"/working_data/")
 
 rot <- read.csv(paste0(w_data,"sw_rot.csv"))
 
-qt <- as.numeric(quantile(rot$cases,probs=c(0.5,0.75,0.9)))
-rot$outb <- ifelse(rot$case<qt[1],'NO',
-                   ifelse(rot$cases>=qt[1]&rot$cases<qt[2],'Small',
-                          ifelse(rot$cases>=qt[2]&rot$cases<qt[3],'Medium','Large')))
+
 
 
 df_prep <- function(df){
-  df_b <- subset(df,lag==0&window==7)
-  i_con <- c(1:3)
-  j_con <- c(14,21,28)
+  dff <- df
+  dff <- subset(dff,window==7&lag==0)
+  qt <- as.numeric(quantile(rot$cases,probs=c(0.5,0.75,0.9)))
+  outb <- ifelse(dff$case<qt[1],'NO',
+                     ifelse(dff$cases>=qt[1]&dff$cases<qt[2],'Small',
+                            ifelse(dff$cases>=qt[2]&dff$cases<qt[3],'Medium','Large')))
+  df_out <- data.frame(c(outb))
+  df <- df[,c(7,24,6,8,9,10,11,12,13,14)]
+  i_con <- c(0:3)
+  j_con <- c(7,21,28)
   for (i in 1:length(i_con)){
     for (j in 1:length(j_con)){
       df_s <-subset(df,lag==i_con[i]&window==j_con[j])
-      #colnames(df_s) <- paste0(colnames(df_s),'_',i_con[i],'_'j_con[j])
-      df_out <- cbind(df_b,df_s)
+      df_s$window<-NULL
+      df_s$lag <- NULL
+      colnames(df_s) <- paste0(colnames(df_s),'_',i_con[i],'_',j_con[j])
+      df_out <- cbind(df_out,df_s)
     }
   }
   return(df_out)
 }
 
-jums <- df_prep(rot)
+rot_pca <- df_prep(rot)
 
-rpca_dat <- subset(rot,window==21&lag==1)
-rpca_out <- rpca_dat$outb
-rpca_dat1 <- rpca_dat[,c(5,7,8,9,10,11,12,13)]
-colnames(rpca_dat1)<-paste0(colnames(rpca_dat1),'_21_1')
+var_lab <- rot_pca$c.outb.
+rot_pca$c.outb. <- NULL
 
-jums <- cbind(rpca_dat1,rpca_out)
-
-
-system.time({my.pca <- prcomp(rpca_dat1,retx = T,center = T,scale=T)
+my.pca <- prcomp(rot_pca,retx = T,center = T,scale=T)
 pca.ind <- get_pca_ind(my.pca)
 df.sc <- data.frame(cbind(pca.ind$coord[,c(1,2)]))
-md <-  pairwise.mahalanobis(df.sc[,1:2],grouping=rpca_dat$outb,cov=cov(df.sc[,1:2]))
-mdd <- md$distance})
+md <-  pairwise.mahalanobis(df.sc[,1:2],grouping=var_lab,cov=cov(df.sc[,1:2]))
+mdd <- md$distance
 fmd <- mdd[upper.tri(mdd,diag=F)]
+
+
+eig.val <- get_eigenvalue(my.pca)
+PC1.expl <- round(eig.val[1,2],2)
+PC2.expl <- round(eig.val[2,2],2)
+res.ind <- get_pca_ind(my.pca)
+PC1.ind <- res.ind$coord[,1]
+PC2.ind <- res.ind$coord[,2]
+res.var <- get_pca_var(my.pca)
+PC1.var <- res.var$coord[,1]
+PC2.var <- res.var$coord[,2]
+labs.var <- rownames(res.var$coord)
+
+dfp <- data.frame(PC1.ind,PC2.ind,var_lab)
+colnames(dfp)[3] <- 'feat'
+
+ggplot(data=dfp,aes(x=PC1.ind,PC2.ind,colour=feat))+
+  geom_point()+
+  stat_ellipse(aes(fill=feat),type='norm',level=0.90,geom='polygon',alpha=0.2,linetype='blank')+
+  theme_bw() +
+  theme(strip.text.x = element_text(hjust = -0.01),
+        panel.grid.major = element_line(colour = "grey90",linetype='dashed'),
+        panel.grid.minor = element_blank(),
+        plot.margin = unit(c(0.5,0.5,0.5,0.5),'lines'),
+        strip.background = element_blank(),
+        strip.text = element_text(size=16),
+        axis.text=element_text(size=14),
+        axis.title=element_text(size=14),
+        legend.position = "bottom")+
+  xlab(paste('Scores PC1 (',PC1.expl,'%',')', sep ='')) +
+  ylab(paste('Scores PC2 (',PC2.expl,'%',')', sep ='')) 
+
+components <- cbind(cases=subset(rot,window==7&lag==0)$cases,my.pca$x[,1:96]) %>% as.data.frame()
+fit2 <- lm(cases~.,data=components)
+summary(fit2)
+jums <- data.frame(my.pca$rotation)
+jums[,1:2]

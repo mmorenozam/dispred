@@ -19,8 +19,7 @@ ppf <- function(trs,tp,cod){
     # df$val[df$val>=log(trs)] <- NA
     df <- subset(df,lag<=5)
     df <- df %>%
-      mutate(corr = ifelse(is.na(val)|is.infinite(val),NA,corr)) %>%
-      mutate(rsq = ifelse(is.na(val)|is.infinite(val),NA,rsq)) 
+      mutate(corr = ifelse(is.na(val)|is.infinite(val),NA,corr)) 
     
     if (tp=='pvals'){
       p1 <- ggplot(subset(df,method=='spearman'),aes(week,as.factor(lag)))+
@@ -32,25 +31,8 @@ ppf <- function(trs,tp,cod){
       save_plot(paste0(out_plots,"pvals_",cod,unique(df$window),".pdf"),p1,base_height = 9,base_width = 12)
     } 
     
-    if (tp=='rsq'){
-      p1 <- ggplot(subset(df,method=='spearman'),aes(week,as.factor(lag)))+
-        geom_raster(aes(fill=val),hjust = 0,vjust=0)+
-        scale_fill_gradientn(colours=c("#0000FFFF","#FF0000FF"))+
-        facet_wrap(~wc)+
-        theme_bw()+
-        theme(legend.position = "bottom")
-      save_plot(paste0(out_plots,"rsqd_",cod,unique(df$window),".pdf"),p1,base_height = 9,base_width = 12)
-    }  
-    
-    if (tp=='aic'){
-      p1 <- ggplot(subset(df,method=='spearman'),aes(week,as.factor(lag)))+
-        geom_raster(aes(fill=val),hjust = 0,vjust=0)+
-        scale_fill_gradientn(colours=c("#0000FFFF","white","#FF0000FF"))+
-        facet_wrap(~wc)+
-        theme_bw()+
-        theme(legend.position = "bottom")
-      save_plot(paste0(out_plots,"aic_",cod,unique(df$window),".pdf"),p1,base_height = 9,base_width = 12)
-    } 
+   
+
     if (tp=='corr'){
       p1 <- ggplot(subset(df,method=='spearman'),aes(week,as.factor(lag)))+
         geom_raster(aes(fill=corr),hjust = 0,vjust=0)+
