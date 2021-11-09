@@ -20,7 +20,7 @@ df_prep <- function(df){
   df_out <- data.frame(c(outb))
   df <- df[,c(7,24,6,8,9,10,11,12,13,14)]
   i_con <- c(0:3)
-  j_con <- c(7,21,28)
+  j_con <- c(7,14,21,28)
   for (i in 1:length(i_con)){
     for (j in 1:length(j_con)){
       df_s <-subset(df,lag==i_con[i]&window==j_con[j])
@@ -76,8 +76,59 @@ ggplot(data=dfp,aes(x=PC1.ind,PC2.ind,colour=feat))+
   xlab(paste('Scores PC1 (',PC1.expl,'%',')', sep ='')) +
   ylab(paste('Scores PC2 (',PC2.expl,'%',')', sep ='')) 
 
-components <- cbind(cases=subset(rot,window==7&lag==0)$cases,my.pca$x[,1:96]) %>% as.data.frame()
-fit2 <- lm(cases~.,data=components)
-summary(fit2)
-jums <- data.frame(my.pca$rotation)
-jums[,1:2]
+#### granger causality
+
+library(lmtest)
+library(tseries)
+
+head(rot_pca)
+
+grang <- cbind(subset(rot,window==7&lag==0)$cases,rot_pca)
+head(grang)
+colnames(grang)[1] <- "cases"
+grang$c.outb.<- NULL
+
+head(grang)
+
+adf.test(grang$SHK_TAG_0_14,k=3)
+
+
+jums<-grangertest(cases~RSK_0_7,order=1,data=grang)
+log(jums$`Pr(>F)`[2])
+grangertest(cases~TMK_0_14,order=1,data=grang)
+grangertest(cases~PM_0_7,order=1,data=grang)
+
+library(generalCorr)
+causeSummary(cbind(grang$TMK_0_14,grang$cases))
+
+jums<-function(rot,win,ord){
+  pvals <- c()
+  for (i in 1:52){
+    jj<-subset(rot,week==i&window==win&lag==0)
+    pvals[i] <- tryCatch(grangertest(cases~PM,order=ord,data=jj)$`Pr(>F)`[2],
+                     error = function(e) NA)
+    print(paste0('week ',i,' pvalue= ',log(pvals[i])))
+  }
+}
+
+jums(rot,14,1)
+
+jums1<-function(rot,ord){
+  pvals <- c()
+  win <- c(7,14,21,28)
+  for (i in 1:length(win)){
+    jj<-subset(rot,window==win[i]&lag==0)
+    pvals[i] <- tryCatch(grangertest(cases~PM,order=ord,data=jj)$`Pr(>F)`[2],
+                         error = function(e) NA)
+    print(paste0('window ',win[i],' log(pvalue)= ',log(pvals[i])))
+  }
+}
+
+jums1(rot,1)
+
+
+jj <- subset(rot,window==14&lag==0)
+plot(jj$cases,jj$TMK)
+table(rot$window)
+
+grangertest(cases~TMK,order=1,data=jj)
