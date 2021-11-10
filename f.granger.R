@@ -54,9 +54,10 @@ jums1 <- df_pre1(df_j,6)
 jums_s <- jums1
 #jums_s$val[jums_s$val>0.05] <- NA
 
-ggplot(jums_s,aes(as.numeric(window),as.factor(lag)))+
+ggplot(jums_s,aes(y=as.numeric(window),x=as.factor(lag)))+
   geom_raster(aes(fill=log(as.numeric(val))),hjust=0,vjust=0)+
-  scale_fill_gradientn(colours=c("#FF0000FF","blue"))+
+  #scale_fill_gradientn(colours=c("#FF0000FF","blue"))+
+  scale_fill_viridis_c(option="C")+
   facet_wrap(~wc)+
   theme_bw()+
   theme(legend.position = "bottom")
