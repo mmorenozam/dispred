@@ -32,7 +32,11 @@ lagf <- function(wdb,dis,w){
   d_cases <- as.data.frame(diff(cas$cases))
   colnames(d_cases) <- 'd_cases'
   cas <- cbind(cas,rbind(d_cases,0))
+<<<<<<< HEAD
   lag_c <- c(0:20)
+=======
+  lag_c <- c(0:4)
+>>>>>>> e3fd97aec040c9f7c2c41bb3893816bffd8f1c4f
   l_out <- list()
   wtv$year <- as.numeric(as.character(strftime(wtv$MESS_DATUM,format= "%Y")))
   for (i in 1:length(lag_c)){
@@ -57,7 +61,11 @@ out_fun <- function(wd,dd,prx,wv){
 }
 
 
+<<<<<<< HEAD
 w_size <- c(7,14,21,28,35,42,49,56)
+=======
+w_size <- c(7:49)
+>>>>>>> e3fd97aec040c9f7c2c41bb3893816bffd8f1c4f
 
 out_fun(all_weat,"t_cas_rot.csv",'sw_rot',w_size)
 out_fun(all_weat,"t_cas_inf.csv",'sw_inf',w_size)
