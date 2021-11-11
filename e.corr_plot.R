@@ -91,16 +91,18 @@ ot_plt('inf', 'sw_corr_inf_')
 
 ############### analysis of the weather windows and lags
 
+bor <- read.csv(paste0(w_data,"sw_rot.csv"))
+
 head(bor)
 
-p_abs <- ggplot(bor,aes(x=window,y=lag))+
+p_abs <- ggplot(bor,aes(y=window,x=lag))+
   geom_raster(aes(fill=TMK))+
   scale_fill_viridis_c(option="C")+
   theme_bw()+
   theme(legend.position = "bottom")
 
   
-p_dif <- ggplot(bor,aes(x=window,y=lag))+
+p_dif <- ggplot(bor,aes(y=window,x=lag))+
   geom_raster(aes(fill=d_TMK))+
   scale_fill_viridis_c(option="C")+
   theme_bw()+

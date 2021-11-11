@@ -13,27 +13,27 @@ cof <- function(df,depend,prx){
   dff[dff<0.00001] <- 0 # to avoid meaningless correlations
   dff$date <- as.Date(dff$date)
   dff <- subset(dff,date<as.Date('2017-01-01'))
-  # dff$d_date <- c(diff(dff$date),7) #this would be necessary if working with differences
+  # dff$d_date <- c(diff(dff$date),500) #this would be necessary if working with differences
   # dff <- subset(dff,d_date==7)
-  # dff$d_date <- NULL
+  dff$d_date <- NULL
   wd <- as.numeric(names(table(dff[,'window'])))
-  df_out <- data.frame()
-  s <- seq(0,4,1) #lag
-  b <- c('d_TMK','d_FM','d_RSK','d_SHK_TAG','d_PM','d_UPM','d_TXK','d_TNK')
+  s <- seq(0,20,1) #lag
+  b <- c('TMK','FM','RSK','SHK_TAG','PM','UPM','TXK','TNK')
   m <- c('spearman')
+  df_out <- data.frame()
   for (u in 1:length(wd)){
     for (j in 1:length(s)){
       for (k in 1:length(b)){
         for (l in 1:length(m)){
           df <- subset(dff,window==wd[u])
-          
-          
           ct <- tryCatch(cor.test(df[df$lag==s[j],b[k]],
                                     df[df$lag==s[j],depend],
                                     method=m[l],exact = F),
                            error = function(e) NA)
-          rtb <- data.frame(cbind(s[j],b[k],m[l],as.numeric(ct[3]),as.numeric(ct[4]),wd[u]))
-          #column order: lag, week, weather,method, pvalue,correlation,window
+
+          rtb <- data.frame(cbind(s[j],b[k],m[l],as.numeric(ct[3]),as.numeric(ct[4])
+                                    ,wd[u]))
+            #column order: lag, week, weather,method, pvalue,correlation,r.squared
           df_out <- rbind(df_out,rtb)
         }
       }
@@ -45,20 +45,21 @@ cof <- function(df,depend,prx){
   df_out$corr <- as.numeric(df_out$corr)
   df_out$method <- as.character(df_out$method)
   df_out$wc <- as.character(df_out$wc)
-  df_out <- df_out %>%  mutate(wc = recode(wc, 
-                                           `TMK` = 'Temp',
-                                           `FM` = 'Wind',
-                                           `RSK` = 'Prec',
-                                           `SHK_TAG` = 'Snow',
-                                           `PM` = 'Press',
-                                           `UPM` = 'Humid',
-                                           `TXK` = 'Max. Temp',
-                                           `TNK` = 'Min. Temp'))
-  
-  write.csv(df_out,paste0(w_data,prx,"tlcc.csv"),row.names = F)
+    df_out <- df_out %>%  mutate(wc = recode(wc, 
+                                             `TMK` = 'Temp',
+                                             `FM` = 'Wind',
+                                             `RSK` = 'Prec',
+                                             `SHK_TAG` = 'Snow',
+                                             `PM` = 'Press',
+                                             `UPM` = 'Humid',
+                                             `TXK` = 'Max. Temp',
+                                             `TNK` = 'Min. Temp'))
+    
+    write.csv(df_out,paste0(w_data,prx,"no_weeks.csv"),row.names = F)
+    #return(df_out)
 }
 
-cof(bor,"d_cases","sw_corr_bor_")
-cof(cam,"d_cases","sw_corr_cam_")
-cof(inf,"d_cases","sw_corr_inf_")
-cof(rot,"d_cases","sw_corr_rot_")
+cof(bor,"cases","sw_corr_bor_")
+cof(cam,"cases","sw_corr_cam_")
+cof(inf,"cases","sw_corr_inf_")
+cof(rot,"cases","sw_corr_rot_")

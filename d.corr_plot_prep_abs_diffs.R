@@ -13,7 +13,7 @@ cof <- function(df,depend,prx){
   dff[dff<0.00001] <- 0 # to avoid meaningless correlations
   dff$date <- as.Date(dff$date)
   dff <- subset(dff,date<as.Date('2017-01-01'))
-  dff$d_date <- c(diff(dff$date),7) #this would be necessary if working with differences
+  dff$d_date <- c(diff(dff$date),500) #this would be necessary if working with differences
   dff <- subset(dff,d_date==7)
   dff$d_date <- NULL
   wd <- as.numeric(names(table(dff[,'window'])))
@@ -55,11 +55,11 @@ cof <- function(df,depend,prx){
                                              `d_TXK` = 'Max. Temp',
                                              `d_TNK` = 'Min. Temp'))
     
-    write.csv(df_out,paste0(w_data,prx,"diffs.csv"),row.names = F)
+    write.csv(df_out,paste0(w_data,prx,"diffs_b.csv"),row.names = F)
     #return(df_out)
 }
 
-cof(bor,"cases","sw_corr_bor_")
-cof(cam,"cases","sw_corr_cam_")
-cof(inf,"cases","sw_corr_inf_")
-cof(rot,"cases","sw_corr_rot_")
+cof(bor,"d_cases","sw_corr_bor_")
+cof(cam,"d_cases","sw_corr_cam_")
+cof(inf,"d_cases","sw_corr_inf_")
+cof(rot,"d_cases","sw_corr_rot_")

@@ -57,7 +57,7 @@ out_fun <- function(wd,dd,prx,wv){
 }
 
 
-w_size <- c(7:49)
+w_size <- c(7,14,21,28,35,42,49,56)
 
 out_fun(all_weat,"t_cas_rot.csv",'sw_rot_gran_',w_size)
 out_fun(all_weat,"t_cas_inf.csv",'sw_inf_gran_',w_size)
