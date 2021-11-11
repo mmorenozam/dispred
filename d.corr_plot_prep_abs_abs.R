@@ -55,7 +55,7 @@ cof <- function(df,depend,prx){
                                              `TXK` = 'Max. Temp',
                                              `TNK` = 'Min. Temp'))
     
-    write.csv(df_out,paste0(w_data,prx,"no_weeks.csv"),row.names = F)
+    write.csv(df_out,paste0(w_data,prx,"abs.csv"),row.names = F)
     #return(df_out)
 }
 
