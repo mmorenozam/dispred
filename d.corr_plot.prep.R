@@ -20,7 +20,7 @@ cof <- function(df,depend,prx){
   for (u in 1:length(wd)){
     df <- subset(dff,window==wd[u])
     w <- seq(1,53,1) #week
-    s <- seq(0,3,1) #lag
+    s <- seq(0,10,1) #lag
     b <- c('TMK','FM','RSK','SHK_TAG','PM','UPM','TXK','TNK')
     m <- c('spearman')
     df_out <- data.frame()

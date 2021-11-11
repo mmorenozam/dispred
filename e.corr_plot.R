@@ -24,7 +24,7 @@ ppf <- function(trs,tp,cod){
     if (tp=='pvals'){
       p1 <- ggplot(subset(df,method=='spearman'),aes(week,as.factor(lag)))+
         geom_raster(aes(fill=val),hjust = 0,vjust=0)+
-        scale_fill_gradientn(colours=c("#FF0000FF","#0000FFFF"))+
+        scale_fill_viridis_c(option="C")+
         facet_wrap(~wc)+
         theme_bw()+
         theme(legend.position = "bottom")
@@ -89,3 +89,23 @@ ot_plt('bor', 'sw_corr_bor_')
 ot_plt('cam', 'sw_corr_cam_')
 ot_plt('inf', 'sw_corr_inf_')
 
+############### analysis of the weather windows and lags
+
+head(bor)
+
+p_abs <- ggplot(bor,aes(x=window,y=lag))+
+  geom_raster(aes(fill=TMK))+
+  scale_fill_viridis_c(option="C")+
+  theme_bw()+
+  theme(legend.position = "bottom")
+
+  
+p_dif <- ggplot(bor,aes(x=window,y=lag))+
+  geom_raster(aes(fill=d_TMK))+
+  scale_fill_viridis_c(option="C")+
+  theme_bw()+
+  theme(legend.position = "bottom")
+
+pg<-plot_grid(p_abs,p_dif,labels=c('A',"B"))
+
+save_plot(paste0(out_plots,"lag_vs_abs.pdf"),pg,base_height = 5,base_width = 10)
