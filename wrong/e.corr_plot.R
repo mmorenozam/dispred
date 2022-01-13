@@ -7,6 +7,7 @@ out_plots <- paste0(wd,'/figures_sliding/')
 out_plots_2 <- paste0(wd,'/figures_boxes/')
 w_data <- paste0(wd,'/working_data/')
 
+
 ppf <- function(trs,tp,cod){
   fils <- list.files(path=w_data,pattern=cod)
   for (i in 1:length(fils)){
@@ -45,10 +46,12 @@ ppf <- function(trs,tp,cod){
   }
 }
 
-ppf(0.05,'pvals','sw_corr_bor_')
-ppf(0.05,'pvals','sw_corr_rot_')
-ppf(0.05,'pvals','sw_corr_inf_')
-ppf(0.05,'pvals','sw_corr_cam_')
+
+
+ppf(0.05,'pvals','sw_corr_bor_7')
+ppf(1,'pvals','sw_corr_rot_7')
+ppf(0.05,'pvals','sw_corr_inf_7')
+ppf(0.05,'pvals','sw_corr_cam_7')
 
 ppf(0.05,'corr','sw_corr_bor_')
 ppf(0.05,'corr','sw_corr_rot_')
@@ -90,7 +93,7 @@ ot_plt('cam', 'sw_corr_cam_')
 ot_plt('inf', 'sw_corr_inf_')
 
 ############### analysis of the weather windows and lags
-
+out <- paste0(wd,'/figures/')
 bor <- read.csv(paste0(w_data,"sw_rot.csv"))
 
 head(bor)
@@ -110,4 +113,4 @@ p_dif <- ggplot(bor,aes(y=window,x=lag))+
 
 pg<-plot_grid(p_abs,p_dif,labels=c('A',"B"))
 
-save_plot(paste0(out_plots,"lag_vs_abs.pdf"),pg,base_height = 5,base_width = 10)
+save_plot(paste0(out,"lag_vs_abs.pdf"),pg,base_height = 5,base_width = 10)

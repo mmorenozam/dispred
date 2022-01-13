@@ -16,7 +16,8 @@ cof <- function(df,depend,prx){
   # dff$d_date <- c(diff(dff$date),7) #this would be necessary if working with differences
   # dff <- subset(dff,d_date==7)
   # dff$d_date <- NULL
-  wd <- as.numeric(names(table(dff[,'window'])))
+  # wd <- as.numeric(names(table(dff[,'window'])))
+  wd <- 7
   for (u in 1:length(wd)){
     df <- subset(dff,window==wd[u])
     w <- seq(1,53,1) #week
