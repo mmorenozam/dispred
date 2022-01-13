@@ -6,7 +6,7 @@ wd <- getwd()
 out_plots <- paste0(wd,'/figures_sliding/')
 w_data <- paste0(wd,'/working_data/')
 
-rot <- read.csv(paste0(w_data,'sw_corr_rot_diffs_abs.csv'))
+rot <- read.csv(paste0(w_data,'sw_corr_rot_no_weeks.csv'))
 rot1 <- rot
 rot1$val[rot1$val>0.05]<-NA
 head(rot)

@@ -20,7 +20,7 @@ lagf <- function(wdb,dis,w){
                             diff(wtv$PM),
                             diff(wtv$UPM)))
   shift <- data.frame(rbind(shift,0))
-  colnames(shift) <- c('d_TMK','d_FM','d_RSK','d_TXK','d_TNK','d_SHK_TAG','d_PM','d_UPM')
+  colnames(shift) <- c('d_TMK','d_FM','d_RSK','d_TXK','d_TNK','d_SHK_TAG','d_PM','d_UPM') #this would not be necessary in case of publishing, no differences will be used from now on
   wtv <- cbind(wtv,shift)
   cas <- read.csv(dis)
   cas$week <- substr(cas[,1],11,12)

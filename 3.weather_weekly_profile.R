@@ -21,7 +21,7 @@ dp_func <- function(df){
 dates <- read.csv(paste0(r_data,"t_cas_rot.csv"))
 dates <- dp_func(dates)
 wdata <- read.csv(paste0(w_data,"wweather.csv"))
-wdata$MESS_DATUM <- as.Date(wdata$MESS_DATUM)
+wdata$MESS_DATUM <- as.Date(wdata$MESS_DATUM)+49
 wdata <- left_join(wdata,dates,by=c("MESS_DATUM"="date"))
 wdata$year <- as.numeric(as.character(strftime(wdata$MESS_DATUM,format= "%Y")))
 
