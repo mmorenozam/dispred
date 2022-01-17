@@ -8,6 +8,24 @@ bor <- read.csv(paste0(w_data,"sw_bor.csv"))
 inf <- read.csv(paste0(w_data,"sw_inf.csv"))
 rot <- read.csv(paste0(w_data,"sw_rot.csv"))
 
+ddi <- function(df){
+  df$hdd <- ifelse(df$TMK <= 10,19-df$TMK,0)
+  df$cdd <- ifelse(df$TMK >= 22,df$TMK-19,0)
+  return(df)
+}
+
+cam <- ddi(cam)
+bor <- ddi(bor)
+inf <- ddi(inf)
+rot <- ddi(rot)
+# 
+# jums<-subset(rot,window==7)
+# 
+# ggplot(subset(rot,window==7),aes(x=as.Date(date),y=TMK))+geom_line()+facet_wrap(~lag)
+
+# ggplot(cam,aes(x=as.Date(date),y=TMK,colour=as.factor(window)))+geom_line()+facet_wrap(~lag)
+
+
 cof <- function(df,depend,prx){
   dff <- df
   dff[dff<0.00001] <- 0 # to avoid meaningless correlations
@@ -18,7 +36,7 @@ cof <- function(df,depend,prx){
   dff$d_date <- NULL
   wd <- as.numeric(names(table(dff[,'window'])))
   s <- seq(0,20,1) #lag
-  b <- c('TMK','FM','RSK','SHK_TAG','PM','UPM','TXK','TNK')
+  b <- c('TMK','FM','RSK','SHK_TAG','PM','UPM','TXK','TNK','hdd','cdd')
   m <- c('spearman')
   df_out <- data.frame()
   for (u in 1:length(wd)){
@@ -55,7 +73,7 @@ cof <- function(df,depend,prx){
                                              `TXK` = 'Max. Temp',
                                              `TNK` = 'Min. Temp'))
     
-    write.csv(df_out,paste0(w_data,prx,"abs.csv"),row.names = F)
+    write.csv(df_out,paste0(w_data,prx,"no_weeks.csv"),row.names = F)
     #return(df_out)
 }
 
