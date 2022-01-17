@@ -12,11 +12,7 @@ inf <- read.csv(paste0(w_data,'sw_corr_inf_no_weeks.csv'))
 bor <- read.csv(paste0(w_data,'sw_corr_bor_no_weeks.csv'))
 
 sub_fun <- function(df){
-<<<<<<< HEAD
   df <- subset(df,wc!="Max. Temp"&wc!="Min. Temp"&wc!="hdd"&wc!="cdd"&lag<=10)
-=======
-  df <- subset(df,wc!="Max. Temp"&wc!="Min. Temp"&wc!="hdd"&wc!="cdd")
->>>>>>> 73dd53beae36d970fdc741962bfa8e70188aa78f
   return(df)
 }
 
